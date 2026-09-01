@@ -23,6 +23,9 @@ data/documents/*
 data/index/*
 !data/index/.gitkeep
 
+# Local SQLite database
+data/*.db
+
 # Logs
 *.log
 
