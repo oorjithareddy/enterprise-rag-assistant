@@ -10,7 +10,7 @@ INDEX_DIR = BASE_DIR / "data" / "index"
 INDEX_PATH = INDEX_DIR / "documents.faiss"
 
 
-def build_faiss_index(embedded_chunks):
+def add_embeddings_to_index(embedded_chunks):
     if not embedded_chunks:
         raise ValueError("No embedded chunks provided")
 
@@ -19,9 +19,15 @@ def build_faiss_index(embedded_chunks):
         dtype="float32"
     )
 
-    dimension = vectors.shape[1]
+    if INDEX_PATH.exists():
+        index = faiss.read_index(str(INDEX_PATH))
 
-    index = faiss.IndexFlatL2(dimension)
+        if index.d != vectors.shape[1]:
+            raise ValueError(
+                "Embedding dimension does not match existing FAISS index"
+            )
+    else:
+        index = faiss.IndexFlatL2(vectors.shape[1])
 
     index.add(vectors)
 
