@@ -4,12 +4,10 @@ from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from app.services.query_router import classify_question
 from app.services.sql_qa import answer_with_sql
 from app.services.retriever import retrieve_chunks
 from app.services.generator import generate_answer
 from app.services.hybrid_qa import answer_with_hybrid
-
 
 load_dotenv()
 
