@@ -6,6 +6,9 @@ from werkzeug.utils import secure_filename
 
 from app.database import get_db_connection
 
+from app.services.rag_pipeline import process_document
+from app.services.retriever import retrieve_chunks
+from app.services.generator import generate_answer
 
 main = Blueprint("main", __name__)
 
@@ -29,6 +32,8 @@ def home():
         "status": "ok"
     })
 
+
+@main.route("/upload", methods=["POST"])
 
 @main.route("/upload", methods=["POST"])
 def upload_document():
@@ -84,7 +89,7 @@ def upload_document():
                 str(file_path.relative_to(BASE_DIR)),
                 "application/pdf",
                 file_size,
-                "uploaded"
+                "processing"
             )
         )
 
@@ -98,21 +103,64 @@ def upload_document():
         if file_path.exists():
             file_path.unlink()
 
-        raise
-
-    finally:
         connection.close()
 
+        raise
+
+    connection.close()
+
+    try:
+        result = process_document(
+            file_path=file_path,
+            document_id=document_id,
+            filename=original_filename
+        )
+
+        connection = get_db_connection()
+
+        connection.execute(
+            """
+            UPDATE documents
+            SET status = ?
+            WHERE id = ?
+            """,
+            ("ready", document_id)
+        )
+
+        connection.commit()
+        connection.close()
+
+    except Exception as error:
+        connection = get_db_connection()
+
+        connection.execute(
+            """
+            UPDATE documents
+            SET status = ?
+            WHERE id = ?
+            """,
+            ("failed", document_id)
+        )
+
+        connection.commit()
+        connection.close()
+
+        return jsonify({
+            "error": "Document processing failed",
+            "document_id": document_id,
+            "details": str(error)
+        }), 500
+
     return jsonify({
-        "message": "Document uploaded successfully",
+        "message": "Document uploaded and indexed successfully",
         "document": {
             "id": document_id,
             "filename": original_filename,
             "file_size": file_size,
-            "status": "uploaded"
+            "status": "ready",
+            "chunk_count": result["chunk_count"]
         }
     }), 201
-
 
 @main.route("/documents", methods=["GET"])
 def get_documents():
@@ -142,3 +190,45 @@ def get_documents():
         "documents": documents,
         "count": len(documents)
     }), 200
+
+@main.route("/ask", methods=["POST"])
+def ask_question():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({
+            "error": "Request body must contain JSON"
+        }), 400
+
+    question = data.get("question")
+
+    if not question or not question.strip():
+        return jsonify({
+            "error": "Question is required"
+        }), 400
+
+    question = question.strip()
+
+    try:
+        retrieved_chunks = retrieve_chunks(
+            query=question,
+            top_k=3
+        )
+
+        result = generate_answer(
+            question=question,
+            retrieved_chunks=retrieved_chunks
+        )
+
+        return jsonify({
+            "question": question,
+            "answer": result["answer"],
+            "sources": result["sources"]
+        }), 200
+
+    except Exception as error:
+        return jsonify({
+            "error": "Failed to answer question",
+            "details": str(error)
+        }), 500
+    
