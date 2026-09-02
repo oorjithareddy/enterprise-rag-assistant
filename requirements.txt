@@ -4,3 +4,4 @@ pymupdf
 google-genai
 faiss-cpu
 pandas
+pytest
