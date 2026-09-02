@@ -3,3 +3,4 @@ python-dotenv
 pymupdf
 google-genai
 faiss-cpu
+pandas

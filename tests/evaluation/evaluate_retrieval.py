@@ -8,7 +8,7 @@ import json
 
 from app.services.retriever import retrieve_chunks
 
-BASE_DIR = Path(__file__).resolve().parents[2]
+
 QUESTIONS_PATH = BASE_DIR / "tests" / "evaluation" / "test_questions.json"
 
 
@@ -17,7 +17,7 @@ def load_questions():
         return json.load(file)
 
 
-def evaluate_question(question_data, top_k):
+def evaluate_question(question_data, top_k=5):
     results = retrieve_chunks(
         query=question_data["question"],
         top_k=top_k
@@ -26,24 +26,15 @@ def evaluate_question(question_data, top_k):
     expected_document = question_data["relevant_document"]
     expected_pages = set(question_data["relevant_pages"])
 
-    for result in results:
-        if (
-            result["filename"] == expected_document
-            and result["page_number"] in expected_pages
-        ):
-            return True
-
-    return False
+    return results, expected_document, expected_pages
 
 
-def calculate_recall_at_k(questions, k):
-    hits = 0
-
-    for question in questions:
-        if evaluate_question(question, k):
-            hits += 1
-
-    return hits / len(questions)
+def is_hit(results, expected_document, expected_pages, k):
+    return any(
+        result["filename"] == expected_document
+        and result["page_number"] in expected_pages
+        for result in results[:k]
+    )
 
 
 def main():
@@ -53,24 +44,33 @@ def main():
     print("RETRIEVAL EVALUATION")
     print("=" * 70)
 
+    results_by_question = []
+
+    for question in questions:
+        results, expected_document, expected_pages = evaluate_question(question)
+
+        results_by_question.append({
+            "question": question["question"],
+            "results": results,
+            "expected_document": expected_document,
+            "expected_pages": expected_pages
+        })
+
     for k in [1, 3, 5]:
         hits = 0
 
         print(f"\nRecall@{k}")
 
-        for question in questions:
-            results = retrieve_chunks(
-                query=question["question"],
-                top_k=k
-            )
+        for evaluation in results_by_question:
+            results = evaluation["results"]
+            expected_document = evaluation["expected_document"]
+            expected_pages = evaluation["expected_pages"]
 
-            expected_document = question["relevant_document"]
-            expected_pages = set(question["relevant_pages"])
-
-            hit = any(
-                result["filename"] == expected_document
-                and result["page_number"] in expected_pages
-                for result in results
+            hit = is_hit(
+                results,
+                expected_document,
+                expected_pages,
+                k
             )
 
             if hit:
@@ -78,7 +78,7 @@ def main():
 
             print(
                 f"[{'HIT' if hit else 'MISS'}] "
-                f"{question['question']}"
+                f"{evaluation['question']}"
             )
 
             if results:

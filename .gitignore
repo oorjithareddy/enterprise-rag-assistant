@@ -32,3 +32,7 @@ data/*.db
 # OS
 .DS_Store
 Thumbs.db
+
+# Local enterprise datasets
+data/olist/*
+!data/olist/.gitkeep

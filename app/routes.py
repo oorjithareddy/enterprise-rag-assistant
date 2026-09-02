@@ -6,9 +6,8 @@ from werkzeug.utils import secure_filename
 
 from app.database import get_db_connection
 
-from app.services.rag_pipeline import process_document
-from app.services.retriever import retrieve_chunks
-from app.services.generator import generate_answer
+from app.services.langchain_orchestrator import answer_with_langchain
+
 
 main = Blueprint("main", __name__)
 
@@ -32,8 +31,6 @@ def home():
         "status": "ok"
     })
 
-
-@main.route("/upload", methods=["POST"])
 
 @main.route("/upload", methods=["POST"])
 def upload_document():
@@ -94,7 +91,6 @@ def upload_document():
         )
 
         connection.commit()
-
         document_id = cursor.lastrowid
 
     except Exception:
@@ -104,7 +100,6 @@ def upload_document():
             file_path.unlink()
 
         connection.close()
-
         raise
 
     connection.close()
@@ -162,6 +157,7 @@ def upload_document():
         }
     }), 201
 
+
 @main.route("/documents", methods=["GET"])
 def get_documents():
     connection = get_db_connection()
@@ -210,25 +206,38 @@ def ask_question():
     question = question.strip()
 
     try:
-        retrieved_chunks = retrieve_chunks(
-            query=question,
-            top_k=3
-        )
+        result = answer_with_langchain(question)
 
-        result = generate_answer(
-            question=question,
-            retrieved_chunks=retrieved_chunks
-        )
-
-        return jsonify({
+        response = {
             "question": question,
-            "answer": result["answer"],
-            "sources": result["sources"]
-        }), 200
+            "route": result["route"],
+            "answer": result["answer"]
+        }
+
+        if result["route"] == "SQL":
+            response["sql"] = result["sql"]
+            response["results"] = result["results"]
+
+        elif result["route"] == "RAG":
+            response["sources"] = result["sources"]
+
+        elif result["route"] == "HYBRID":
+            response["sql"] = result["sql"]
+            response["results"] = result["results"]
+            response["sources"] = result["sources"]
+
+        return jsonify(response), 200
 
     except Exception as error:
+        error_message = str(error)
+
+        if "429" in error_message or "quota" in error_message.lower():
+            return jsonify({
+                "error": "AI service rate limit exceeded",
+                "details": "Please retry after the Gemini API quota resets."
+            }), 429
+
         return jsonify({
             "error": "Failed to answer question",
-            "details": str(error)
+            "details": error_message
         }), 500
-    

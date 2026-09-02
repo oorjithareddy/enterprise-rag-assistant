@@ -1,4 +1,4 @@
-def chunk_text(text, chunk_size=700, overlap=100):
+def chunk_text(text, chunk_size=400, overlap=80):
     if not text:
         return []
 

@@ -10,14 +10,64 @@
         "relevant_pages": [2, 3]
     },
     {
-    "question": "What machine learning architecture is used in the proposed system?",
-    "relevant_document": "ICMLDE_FINALDRAFT.pdf",
-    "relevant_pages": [3, 4, 5]
+        "question": "What machine learning architecture is used in the proposed system?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [3, 4, 5]
     },
     {
         "question": "Why is a multimodal approach useful for material recognition?",
         "relevant_document": "ICMLDE_FINALDRAFT.pdf",
         "relevant_pages": [2, 9]
+    },
+    {
+        "question": "What is the role of the BME688 sensor in the glove?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [1, 2]
+    },
+    {
+        "question": "What processor or microcontroller is used in the proposed glove?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [2,3]
+    },
+    {
+        "question": "What type of sensors are used to measure force or pressure?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [2, 3]
+    },
+    {
+        "question": "How are the different sensor modalities combined in the proposed system?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [2, 5]
+    },
+    {
+        "question": "What is feature-level fusion in the proposed material recognition system?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [2, 5]
+    },
+    {
+        "question": "What neural network components are used in the material recognition architecture?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [5]
+    },
+    {
+        "question": "What optimizer is used for training the CNN-BiLSTM model?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [5]
+    },
+    {
+        "question": "What classification layer is used at the end of the proposed architecture?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [5]
+    },
+    {
+        "question": "What are the limitations of the proposed system?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [11]
+    },
+    {
+        "question": "What future improvements are suggested for the system?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [11]
     },
     {
         "question": "What technical skills does the candidate have?",
@@ -36,6 +86,36 @@
     },
     {
         "question": "What projects has the candidate worked on?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What programming technologies are included in the candidate's skill set?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "Which software development frameworks does the candidate list?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What technical tools does the candidate have experience with?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What kinds of projects are included in the candidate's resume?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What areas of technology does the candidate have experience in?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What technologies are mentioned across the candidate's technical skills and projects?",
         "relevant_document": "Oorjitha_AI.pdf",
         "relevant_pages": [1]
     }
