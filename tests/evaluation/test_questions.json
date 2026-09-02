@@ -1,0 +1,42 @@
+[
+    {
+        "question": "What sensors are used in the proposed wearable glove?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [3]
+    },
+    {
+        "question": "What technologies allow the glove to recognize different materials?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [2, 3]
+    },
+    {
+    "question": "What machine learning architecture is used in the proposed system?",
+    "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+    "relevant_pages": [3, 4, 5]
+    },
+    {
+        "question": "Why is a multimodal approach useful for material recognition?",
+        "relevant_document": "ICMLDE_FINALDRAFT.pdf",
+        "relevant_pages": [2, 9]
+    },
+    {
+        "question": "What technical skills does the candidate have?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What programming languages does the candidate know?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What frameworks and tools are listed in the candidate's technical skills?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    },
+    {
+        "question": "What projects has the candidate worked on?",
+        "relevant_document": "Oorjitha_AI.pdf",
+        "relevant_pages": [1]
+    }
+]
